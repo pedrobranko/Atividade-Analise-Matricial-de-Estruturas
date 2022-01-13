@@ -1,2 +1,6 @@
+*.bak
+
 .idea/
 material de consulta/
+**/__pycache__
+
