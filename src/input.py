@@ -2,6 +2,7 @@ from src import objects as obj
 from src import builder as bld
 import matplotlib.pyplot as plt
 
+
 class InputParametersFromFile:
     def __init__(self, filename):
         self.filename = filename
@@ -28,7 +29,6 @@ class InputParametersFromFile:
 
             break
 
-        print('')
 
 class InputParameters:
     def __init__(self):
@@ -72,7 +72,7 @@ class InputParameters:
                 fig, ax = plt.subplots()
                 ax.scatter(xNodes, yNodes)
                 for i, txt in enumerate(nodeIdList):
-                    ax.annotate(txt, (xNodes[i]+ .03, yNodes[i] + .03))
+                    ax.annotate(txt, (xNodes[i] + .03, yNodes[i] + .03))
                 plt.show()
 
             if int(inputVariable) == 5: return

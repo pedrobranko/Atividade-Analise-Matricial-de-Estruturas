@@ -1,3 +1,6 @@
+import numpy as np
+
+
 class Node:
     def __init__(self, xNode, yNode, sup=None):
         self.id = None
@@ -8,13 +11,22 @@ class Node:
     def setId(self, id):
         self.id = id
 
+
 class LinStructure:
-    def __init__(self, nodes=None, I=None, A=None, E=None):
+    def __init__(self, nodes, I=None, A=None, E=None):
         self.id = None
-        self.nodes = nodes if nodes is not None else []
+        self.nodes = nodes
         self.I = I
         self.A = A
         self.E = E
+        self.L = ((nodes[1].xNode - nodes[0].xNode) ** 2 + ((nodes[1].yNode - nodes[0].yNode) ** 2)) ** .5
+
+        cos = (nodes[1].xNode - nodes[0].xNode) / self.L
+        sen = (nodes[1].yNode - nodes[0].yNode) / self.L
+        self.kLocal = np.matrix([[cos ** 2, cos * sen, -cos ** 2, -cos * sen],
+                                 [cos * sen, sen ** 2, -cos * sen, -sen ** 2],
+                                 [-cos ** 2, -cos * sen, cos ** 2, cos * sen],
+                                 [-cos * sen, -sen ** 2, cos * sen, sen ** 2]])
 
     def setId(self, id):
         self.id = id
