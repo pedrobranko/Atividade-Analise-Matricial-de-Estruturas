@@ -55,8 +55,8 @@ class InputParameters:
                     print("\nParâmetro Inválido: Insira ID's diferentes")
 
                 else:
-                    linStr = obj.LinStructure(nodes=[self.build.nodeList[node1Id], self.build.nodeList[node2Id]])
-                    self.build.addLinStructure(linStr)
+                    linStr = obj.Truss(nodes=[self.build.nodeList[node1Id], self.build.nodeList[node2Id]])
+                    self.build.addTruss(linStr)
             '''else:
                 print("\nParâmetro Inválido: Defina dois pontos ou mais\n")'''
 
@@ -75,4 +75,5 @@ class InputParameters:
                     ax.annotate(txt, (xNodes[i] + .03, yNodes[i] + .03))
                 plt.show()
 
-            if int(inputVariable) == 5: return
+            if int(inputVariable) == 5:
+                return

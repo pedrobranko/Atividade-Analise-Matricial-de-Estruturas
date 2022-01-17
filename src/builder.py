@@ -12,7 +12,7 @@ class Builder:
         self.nodeList.append(node)
         self.nodeIdList.append(idNode)
 
-    def addLinStructure(self, linSructure):
+    def addTruss(self, linSructure):
         linSructure = linSructure
         idLin = len(self.linStructureIdList) if len(self.linStructureIdList) != 0 else 0
         linSructure.setId(idLin)
