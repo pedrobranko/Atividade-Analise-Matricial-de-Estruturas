@@ -35,30 +35,26 @@ class Truss:
         self.I = I if I is not None else 0
         self.S = S
         self.E = E
+        self.J = [2 * self.nodes[0].id, 2 * self.nodes[0].id + 1]
+        self.K = [2 * self.nodes[1].id, 2 * self.nodes[1].id + 1]
         self.L = ((nodes[1].xNode - nodes[0].xNode) ** 2 + ((nodes[1].yNode - nodes[0].yNode) ** 2)) ** .5
-
-        cos = (nodes[1].xNode - nodes[0].xNode) / self.L
-        sen = (nodes[1].yNode - nodes[0].yNode) / self.L
-        self.kLocal = np.matrix([[cos ** 2, cos * sen, -cos ** 2, -cos * sen],
-                                 [cos * sen, sen ** 2, -cos * sen, -sen ** 2],
-                                 [-cos ** 2, -cos * sen, cos ** 2, cos * sen],
-                                 [-cos * sen, -sen ** 2, cos * sen, sen ** 2]])
-        self.kLocal = self.kLocal * (self.E * self.S / self.L)
+        rElem = np.array([[1, 0, -1, 0], [0, 0, 0, 0], [-1, 0, 1, 0], [0, 0, 0, 0]])
+        self.rElem = np.multiply(rElem, (self.E * self.S / self.L))
+        self.cos = (nodes[1].xNode - nodes[0].xNode) / self.L
+        self.sen = (nodes[1].yNode - nodes[0].yNode) / self.L
+        self.bElem = np.array([[self.cos, self.sen, 0, 0], [-self.sen, self.cos, 0, 0], [0, 0, self.cos, self.sen], [0, 0, -self.sen, self.cos]])
+        self.RElem = np.matmul(np.matmul(self.bElem.transpose(), self.rElem), self.bElem)
         self.globalPositionElem = []
-        self.kGlobalElem = []
+        self.RGlobalElem = []
 
     def setId(self, id):
         self.id = id
 
     def setElementGlobalParameters(self, nNodes):
         BMatrixI = np.zeros([4, 2 * nNodes])
-        j1 = 2 * self.nodes[0].id
-        j2 = 2 * self.nodes[0].id + 1
-        k1 = 2 * self.nodes[1].id
-        k2 = 2 * self.nodes[1].id + 1
-        BMatrixI[0][j1] = 1
-        BMatrixI[1][j2] = 1
-        BMatrixI[2][k1] = 1
-        BMatrixI[3][k2] = 1
-        self.kGlobalElem = (np.matmul(np.matmul(BMatrixI.T, self.kLocal), BMatrixI))
+        BMatrixI[0][self.J[0]] = 1
+        BMatrixI[1][self.J[1]] = 1
+        BMatrixI[2][self.K[0]] = 1
+        BMatrixI[3][self.K[1]] = 1
+        self.RGlobalElem = (np.matmul(np.matmul(BMatrixI.T, self.RElem), BMatrixI))
         self.globalPositionElem = BMatrixI

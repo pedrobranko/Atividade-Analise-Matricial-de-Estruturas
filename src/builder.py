@@ -67,8 +67,9 @@ class InputParametersFromFile:
 
             if aux == "#END":
                 file.close()
-                self.data.getGlobalForces()
-                self.data.getPrescribedNodes()
+                self.data.setGlobalForces()
+                self.data.setPrescribedNodes()
+                self.data.setGlobalKMatrix()
                 break
 
 

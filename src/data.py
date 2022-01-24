@@ -5,6 +5,7 @@ class Data:
         self.linStructureList = []
         self.globalForces = []
         self.prescribedNodes = []
+        self.RGlobal = []
 
     def addMaterial(self, material):
         material = material
@@ -24,14 +25,37 @@ class Data:
         linSructure.setId(idLin)
         self.linStructureList.append(linSructure)
 
-    def getGlobalForces(self):
+    def setGlobalForces(self):
         for i in range(len(self.nodeList)):
             self.globalForces.append(self.nodeList[i].fX)
             self.globalForces.append(self.nodeList[i].fY)
 
-    def getPrescribedNodes(self):
+    def setPrescribedNodes(self):
         for i in range(len(self.nodeList)):
             if self.nodeList[i].sup[0] == 1:
                 self.prescribedNodes.append(2 * i)
             if self.nodeList[i].sup[1] == 1:
                 self.prescribedNodes.append(2 * i + 1)
+
+    def setGlobalKMatrix(self):
+        self.linStructureList[0].setElementGlobalParameters(len(self.nodeList))
+        self.RGlobal = self.linStructureList[0].RGlobalElem.copy()
+
+        for i in range(1, len(self.linStructureList)):
+            self.linStructureList[i].setElementGlobalParameters(len(self.nodeList))
+            self.RGlobal += self.linStructureList[i].RGlobalElem.copy()
+
+    @property
+    def getGlobalForces(self):
+        globalForces = self.globalForces.copy()
+        return globalForces
+
+    @property
+    def getPrescribedNodes(self):
+        prescribedNodes = self.prescribedNodes.copy()
+        return prescribedNodes
+
+    @property
+    def getRGlobal(self):
+        RGlobal = self.RGlobal.copy()
+        return RGlobal
