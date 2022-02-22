@@ -42,7 +42,8 @@ class Truss:
         self.rElem = np.multiply(rElem, (self.E * self.S / self.L))
         self.cos = (nodes[1].xNode - nodes[0].xNode) / self.L
         self.sen = (nodes[1].yNode - nodes[0].yNode) / self.L
-        self.bElem = np.array([[self.cos, self.sen, 0, 0], [-self.sen, self.cos, 0, 0], [0, 0, self.cos, self.sen], [0, 0, -self.sen, self.cos]])
+        self.bElem = np.array([[self.cos, self.sen, 0, 0], [-self.sen, self.cos, 0, 0], [0, 0, self.cos, self.sen],
+                               [0, 0, -self.sen, self.cos]])
         self.RElem = np.matmul(np.matmul(self.bElem.transpose(), self.rElem), self.bElem)
         self.globalPositionElem = []
         self.RGlobalElem = []

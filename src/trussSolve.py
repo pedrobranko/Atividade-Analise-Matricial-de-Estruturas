@@ -59,7 +59,7 @@ class Solve:
                             supFor[i] -= self.internalForces[elem.id][2] * abs(elem.sen)
             self.supportForces.append([sup, supFor])
 
-    def run(self):
+    def solveTruss(self):
         self.setPenalty()
         self.setGlobalDisplacemente()
         self.setInternalForces()

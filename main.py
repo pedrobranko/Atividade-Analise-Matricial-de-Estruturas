@@ -1,10 +1,12 @@
 from src import builder as bd
 from src import trussSolve as slv
-"""init = inp.InputParametersFromFile("exemplo.txt")
-init.openFile()"""
+from src import output as out
 
-init = bd.InputParametersFromFile('exemplo.txt')
+inputName = input("Insira o nome do arquivo: ")
+init = bd.InputParametersFromFile(inputName)
 init.readFile()
 solve = slv.Solve(init.data)
-solve.run()
-print("")
+solve.solveTruss()
+out = out.Output(init.data, solve)
+out.outputFile(inputName)
+
