@@ -19,16 +19,23 @@ class Data:
         node.setId(idNode)
         self.nodeList.append(node)
 
-    def addTruss(self, linSructure):
+    def addLinStructure(self, linSructure):
         linSructure = linSructure
         idLin = len(self.linStructureList) if len(self.linStructureList) != 0 else 0
         linSructure.setId(idLin)
         self.linStructureList.append(linSructure)
 
-    def setGlobalForces(self):
+    def setTrussGlobalForces(self):
         for i in range(len(self.nodeList)):
             self.globalForces.append(self.nodeList[i].fX)
             self.globalForces.append(self.nodeList[i].fY)
+
+    def setFrameGlobalForces(self):
+        for i in range(len(self.nodeList)):
+            self.globalForces.append(self.nodeList[i].fX)
+            self.globalForces.append(self.nodeList[i].fY)
+            self.globalForces.append(self.nodeList[i].mz)
+
 
     def setPrescribedNodes(self):
         for i in range(len(self.nodeList)):

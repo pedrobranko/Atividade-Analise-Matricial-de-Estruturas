@@ -11,6 +11,7 @@ class InputParametersFromFile:
     def readFile(self):
         file = open(self.filename, "r")
         aux = ''
+        structureType = ""
 
         while True:
             aux = file.readline()
@@ -26,7 +27,8 @@ class InputParametersFromFile:
                     idMaterial = int(aux[0])
                     E = float(aux[1])
                     S = float(aux[2])
-                    material = obj.Material(E=E, S=S)
+                    I = float(aux[3])
+                    material = obj.Material(E=E, S=S, I=I)
                     material.setId(idMaterial)
                     self.data.addMaterial(material)
 
@@ -45,11 +47,13 @@ class InputParametersFromFile:
                     ySuport = float(aux[4])
                     fX = float(aux[5])
                     fY = float(aux[6])
-                    node = obj.Node(xNode=xNode, yNode=yNode, sup=[xSuport, ySuport], fX=fX, fY=fY)
+                    mz = float(aux[7])
+                    node = obj.Node(xNode=xNode, yNode=yNode, sup=[xSuport, ySuport], fX=fX, fY=fY, mz=mz)
                     node.setId(idNode)
                     self.data.addNode(node)
 
             if aux == "#TRUSS\n":
+                structureType = "Truss"
                 aux = file.readline()
                 aux = file.readline()
                 nTruss = int(aux.split("\n")[0])
@@ -63,11 +67,33 @@ class InputParametersFromFile:
                     n2 = self.data.nodeList[int(aux[3])]
                     truss = obj.Truss(nodes=[n1, n2], E=material.E, S=material.S)
                     truss.setId(id)
-                    self.data.addTruss(truss)
+                    self.data.addLinStructure(truss)
+
+            if aux == "#BAR\n":
+                structureType = "Frame"
+                aux = file.readline()
+                aux = file.readline()
+                nBar = int(aux.split("\n")[0])
+                aux = file.readline()
+                for i in range(nBar):
+                    aux = file.readline()
+                    aux = aux.split("\t")
+                    id = aux[0]
+                    material = self.data.materialList[int(aux[1])]
+                    n1 = self.data.nodeList[int(aux[2])]
+                    n2 = self.data.nodeList[int(aux[3])]
+                    qx = float(aux[4])
+                    qy = float(aux[5])
+                    bar = obj.Bar(nodes=[n1, n2], E=material.E, S=material.S, I=material.I, qx=qx, qy=qy)
+                    bar.setId(id)
+                    self.data.addLinStructure(bar)
 
             if aux == "#END":
                 file.close()
-                self.data.setGlobalForces()
+                if structureType == "Truss":
+                    self.data.setTrussGlobalForces()
+                if structureType == "Frame":
+                    self.data.setFrameGlobalForces()
                 self.data.setPrescribedNodes()
                 self.data.setGlobalKMatrix()
                 break
@@ -99,7 +125,7 @@ class InputParameters:
 
                 else:
                     linStr = obj.Truss(nodes=[self.build.nodeList[node1Id], self.build.nodeList[node2Id]])
-                    self.build.addTruss(linStr)
+                    self.build.addLinStructure(linStr)
             '''else:
                 print("\nParâmetro Inválido: Defina dois pontos ou mais\n")'''
 
